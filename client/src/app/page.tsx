@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -78,7 +77,7 @@ export default function Home() {
             className="prose prose-lg max-w-none mx-auto text-gray-600"
           >
             <p className="text-xl leading-relaxed">
-              I'm a software engineer with a passion for Generative AI and building innovative solutions.
+              I&apos;m a software engineer with a passion for Generative AI and building innovative solutions.
               My journey combines technical expertise with a deep understanding of healthcare technology,
               allowing me to create impactful solutions that make a real difference.
             </p>
@@ -168,7 +167,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-            Let's Build Something Amazing Together
+            Let&apos;s Build Something Amazing Together
           </h2>
           <motion.a
             href="/contact"

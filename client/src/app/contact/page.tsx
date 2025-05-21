@@ -36,6 +36,7 @@ export default function Contact() {
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => setStatus('idle'), 3000);
     } catch (error) {
+      console.log(error);
       setStatus('error');
       setTimeout(() => setStatus('idle'), 3000);
     }
@@ -52,11 +53,11 @@ export default function Contact() {
         {/* Header Section */}
         <motion.div variants={fadeInUp} className="text-center mb-12">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent mb-4">
-            Let's Connect
+            Let&apos;s Connect
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            I'm always interested in hearing about new projects and opportunities. 
-            Whether you have a question or just want to say hi, I'll try my best to get back to you!
+            I&apos;m always interested in hearing about new projects and opportunities. 
+            Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you!
           </p>
         </motion.div>
 
