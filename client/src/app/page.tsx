@@ -60,7 +60,7 @@ export default function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Software Engineer & AI Enthusiast
+            Software Engineer
           </motion.h2>
           <motion.p 
             className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed"
@@ -68,7 +68,7 @@ export default function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            Building the future of healthcare technology through innovative AI solutions
+            Striving to make an impact. I enjoy building technology through innovative AI solutions
             and full-stack development.
           </motion.p>
         </motion.div>
