@@ -1,17 +1,34 @@
-import ImpactClient from './ImpactClient';
+import ImpactClient from '@/app/impact/ImpactClient';
+
+// This function will be called at build time
+export async function generateStaticParams() {
+  return [];
+}
 
 // This is a Server Component by default (no 'use client' directive)
 async function getImpactMessage() {
-  // This fetch will be executed on the server
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/impact`, {
-    cache: 'no-store' // This ensures we get fresh data on each request
-  });
-  
-  if (!res.ok) {
-    throw new Error('Failed to fetch impact message');
+  // During build time, return a static message
+  if (process.env.NODE_ENV === 'production') {
+    return { message: "Hello World" };
   }
-  
-  return res.json();
+
+  // During development, fetch from the API
+  try {
+    const res = await fetch('http://localhost:3000/api/impact', {
+      cache: 'no-store',
+      next: { revalidate: 0 }
+    });
+    
+    if (!res.ok) {
+      throw new Error('Failed to fetch impact message');
+    }
+    
+    return res.json();
+  } catch (error) {
+    // Fallback to static message if fetch fails
+    console.error('Error fetching impact message:', error);
+    return { message: "Hello World" };
+  }
 }
 
 export default async function Impact() {
