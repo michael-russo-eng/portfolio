@@ -34,7 +34,7 @@ export default function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            Mike Russo
+            Michael Russo 3rd
           </motion.h1>
           <motion.h2 
             className="text-2xl md:text-3xl text-gray-600 mb-8"
