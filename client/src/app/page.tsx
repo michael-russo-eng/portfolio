@@ -21,7 +21,15 @@ const demos = [
     title: "Sushi Maker",
     videoUrl: "/videos/sushi-maker.mp4",
     description: "Automatic sushi machine that makes a piece of 'nigiri sushi'.",
-    link: "https://www.youtube.com/watch?v=pPuZfKiCb-4"
+    link: "https://www.youtube.com/watch?v=pPuZfKiCb-4",
+    tag: "Prototyping/2018"
+  },
+    {
+    title: "ReMotion",
+    videoUrl: "/videos/remotion.mp4",
+    description: "Supporting Remote Collaboration in Open Space with Embodied Proxy.",
+    link: "https://www.youtube.com/watch?v=Sy0UpruV6C4",
+    tag: "CHI/2023"
   },
 
 ];
@@ -95,6 +103,53 @@ export default function Home() {
         </motion.div>
       </section>
 
+            {/* Demos Section */}
+      <section className="py-20 bg-white">
+        <motion.div 
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+        >
+          <motion.div variants={fadeInUp} className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Demos
+            </h2>
+            <div className="w-24 h-1 bg-blue-500 mx-auto rounded-full" />
+          </motion.div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {demos.map((demo) => (
+              <a
+                key={demo.title}
+                href={demo.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 overflow-hidden"
+              >
+                <div className="relative w-full h-56 bg-gray-100">
+                  <video
+                    src={demo.videoUrl}
+                    className="object-cover w-full h-full"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                  <span className="absolute top-4 left-4 bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
+                    {demo.tag}
+                  </span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{demo.title}</h3>
+                  <p className="text-gray-600 text-sm">{demo.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
       {/* Skills Section */}
       <section className="py-20 bg-gray-50">
         <motion.div 
@@ -163,53 +218,6 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Demos Section */}
-      <section className="py-20 bg-white">
-        <motion.div 
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <motion.div variants={fadeInUp} className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Demos
-            </h2>
-            <div className="w-24 h-1 bg-blue-500 mx-auto rounded-full" />
-          </motion.div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {demos.map((demo) => (
-              <a
-                key={demo.title}
-                href={demo.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 overflow-hidden"
-              >
-                <div className="relative w-full h-56 bg-gray-100">
-                  <video
-                    src={demo.videoUrl}
-                    className="object-cover w-full h-full"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                  <span className="absolute top-4 left-4 bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
-                    Prototyping/2018
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{demo.title}</h3>
-                  <p className="text-gray-600 text-sm">{demo.description}</p>
-                </div>
-              </a>
-            ))}
           </div>
         </motion.div>
       </section>
