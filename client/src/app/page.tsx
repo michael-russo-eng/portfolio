@@ -75,7 +75,7 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-white">
+      <section className="py-2 bg-white">
         <motion.div 
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           variants={staggerContainer}
