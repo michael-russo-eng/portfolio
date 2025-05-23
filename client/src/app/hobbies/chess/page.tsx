@@ -30,10 +30,20 @@ export default function ChessPage() {
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Chess Journey</h2>
         <div className="prose prose-lg max-w-none text-gray-600">
           <p>
-            Chess has been a passion of mine for many years, combining strategic thinking with 
-            continuous learning. I enjoy both casual games and competitive play, constantly 
-            working to improve my understanding of openings, middle game tactics, and endgame 
-            techniques.
+            Chess has been a fascinating journey for me. I&apos;ve spent countless hours studying openings,
+            analyzing positions, and playing games, yet somehow I always seem to find myself stuck at the
+            same rating. It&apos;s like trying to solve a Rubik&apos;s cube while someone keeps adding new
+            colors to it!
+          </p>
+          <p>
+            After years of trying to improve and hitting that frustrating plateau, I decided to take a
+            different approach. Instead of trying to build a bot that could beat me (which, let&apos;s be
+            honest, wouldn&apos;t be that hard), I created something unique: a bot that&apos;s designed to
+            lose. Using a <span className="font-semibold text-purple-600">minimax algorithm</span> with a 
+            <span className="font-semibold text-purple-600"> reversed evaluation function</span>, this bot 
+            actively tries to make the worst possible moves. It&apos;s like playing against someone who&apos;s 
+            trying to lose, but in a way that makes you question your own chess abilities when you still 
+            manage to lose to it!
           </p>
         </div>
       </motion.section>
@@ -41,11 +51,56 @@ export default function ChessPage() {
       {/* Interactive Chess Game */}
       <motion.section variants={fadeInUp}>
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Play a Game</h2>
-        <p className="text-gray-600 mb-8">
-          Challenge yourself against our AI opponent. The computer will make random moves, 
-          making it perfect for practice and learning. Click on a piece to see its possible moves, 
-          and try to checkmate the computer!
-        </p>
+        <div className="prose prose-lg max-w-none text-gray-600 mb-8">
+          <p>
+            Welcome to what might be the most humbling chess experience you&apos;ll ever have. I present to
+            you a chess bot that&apos;s specifically programmed to lose. Yes, you read that right. After
+            years of struggling to improve my own chess rating, I decided to create a bot that would make
+            me feel better about my chess skills. The irony? It&apos;s still challenging to beat!
+          </p>
+          <p>
+            This bot uses a <span className="font-semibold text-purple-600">minimax algorithm</span> with a 
+            <span className="font-semibold text-purple-600"> depth of 2</span> and 
+            <span className="font-semibold text-purple-600"> alpha-beta pruning</span> for efficiency. 
+            Instead of looking for the best moves, it actively seeks out the worst possible moves through a 
+            <span className="font-semibold text-purple-600"> reversed evaluation function</span> that 
+            rewards bad chess principles. The algorithm&apos;s key design choices include:
+          </p>
+          <ul>
+            <li>
+              <span className="font-semibold text-purple-600">Reversed piece values</span> - Higher scores 
+              indicate worse positions for black
+            </li>
+            <li>
+              <span className="font-semibold text-purple-600">Position-based penalties</span> - Rewards 
+              pieces for being in bad positions
+            </li>
+            <li>
+              <span className="font-semibold text-purple-600">Strategic weaknesses</span> - Encourages 
+              creation of structural weaknesses
+            </li>
+          </ul>
+          <p>
+            The bot will consistently try to:
+          </p>
+          <ul>
+            <li>Keep its pieces on the <span className="font-semibold text-purple-600">back rank</span> (undeveloped)</li>
+            <li>Move pieces to the <span className="font-semibold text-purple-600">edges of the board</span> (poor positioning)</li>
+            <li>Create <span className="font-semibold text-purple-600">isolated pieces</span> (tactical weaknesses)</li>
+            <li>Make <span className="font-semibold text-purple-600">doubled pawns</span> (structural weaknesses)</li>
+            <li>Keep its <span className="font-semibold text-purple-600">king in the center</span> (safety risk)</li>
+          </ul>
+          <p>
+            Your challenge? Try to win against a bot that&apos;s trying to lose. If you still manage to
+            lose to this bot, well... welcome to my world of chess frustration! Maybe we should start a
+            support group for people who can&apos;t even beat a bot that&apos;s trying to lose.
+          </p>
+          <p className="text-sm text-gray-500 italic">
+            Note: If you do lose to this bot, don&apos;t worry - it&apos;s probably just a bug in the
+            <span className="font-semibold text-purple-600"> evaluation function</span>. Definitely not your 
+            chess skills. Definitely not.
+          </p>
+        </div>
         <ChessGame />
       </motion.section>
 

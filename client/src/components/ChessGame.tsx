@@ -13,6 +13,157 @@ type SquareStyles = {
   };
 };
 
+// Piece values for position evaluation (reversed for black)
+const PIECE_VALUES = {
+  p: -1,   // pawn (negative because we want to lose them)
+  n: -3,   // knight
+  b: -3,   // bishop
+  r: -5,   // rook
+  q: -9,   // queen
+  k: 0,    // king (not used in evaluation)
+};
+
+// Evaluate the position from black's perspective (we want black to lose)
+function evaluatePosition(game: Chess): number {
+  let score = 0;
+  const board = game.board();
+
+  // Material evaluation (reversed for black)
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      const piece = board[i][j];
+      if (piece) {
+        // For black pieces, we want to maximize their value (to lose them)
+        // For white pieces, we want to minimize their value (to help white)
+        const value = PIECE_VALUES[piece.type] || 0;
+        score += piece.color === 'b' ? value : -value;
+      }
+    }
+  }
+
+  // Position evaluation (encourage bad positions for black)
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      const piece = board[i][j];
+      if (piece && piece.color === 'b') {
+        // Encourage pieces to stay on the back rank (bad development)
+        if (i === 0) {
+          score += 0.5;
+        }
+        
+        // Encourage pieces to move to the edges (bad positioning)
+        const distanceFromCenter = Math.abs(3.5 - i) + Math.abs(3.5 - j);
+        score += distanceFromCenter * 0.1;
+
+        // Encourage pieces to be isolated
+        let hasNeighbor = false;
+        for (let di = -1; di <= 1; di++) {
+          for (let dj = -1; dj <= 1; dj++) {
+            if (di === 0 && dj === 0) continue;
+            const ni = i + di;
+            const nj = j + dj;
+            if (ni >= 0 && ni < 8 && nj >= 0 && nj < 8) {
+              const neighbor = board[ni][nj];
+              if (neighbor && neighbor.color === 'b') {
+                hasNeighbor = true;
+                break;
+              }
+            }
+          }
+        }
+        if (!hasNeighbor) {
+          score += 0.3;
+        }
+      }
+    }
+  }
+
+  // Encourage bad pawn structure
+  for (let j = 0; j < 8; j++) {
+    let blackPawnsOnFile = 0;
+    for (let i = 0; i < 8; i++) {
+      const piece = board[i][j];
+      if (piece && piece.color === 'b' && piece.type === 'p') {
+        blackPawnsOnFile++;
+        // Encourage pawns to stay on their starting squares
+        if (i === 1) {
+          score += 0.2;
+        }
+      }
+    }
+    // Encourage doubled pawns
+    if (blackPawnsOnFile > 1) {
+      score += 0.5 * (blackPawnsOnFile - 1);
+    }
+  }
+
+  // Encourage king to stay in the center
+  const blackKing = game.board().flat().find(p => p?.color === 'b' && p?.type === 'k');
+  if (blackKing) {
+    const [i, j] = [Math.floor(game.board().findIndex(row => row.includes(blackKing)) / 8), 
+                    game.board().findIndex(row => row.includes(blackKing)) % 8];
+    const distanceFromCenter = Math.abs(3.5 - i) + Math.abs(3.5 - j);
+    score += (7 - distanceFromCenter) * 0.3;
+  }
+
+  return score;
+}
+
+// Find the worst move for black
+function findWorstMove(game: Chess, depth: number): Move {
+  const moves = game.moves({ verbose: true });
+  let bestScore = -Infinity; // We want the highest score (worst position)
+  let worstMove = moves[0];
+
+  for (const move of moves) {
+    const gameCopy = new Chess(game.fen());
+    gameCopy.move(move);
+    const score = minimax(gameCopy, depth - 1, -Infinity, Infinity, true);
+    
+    if (score > bestScore) { // Changed from < to > to find worst move
+      bestScore = score;
+      worstMove = move;
+    }
+  }
+
+  return worstMove;
+}
+
+// Minimax with alpha-beta pruning (modified for finding worst moves)
+function minimax(game: Chess, depth: number, alpha: number, beta: number, isMaximizing: boolean): number {
+  if (depth === 0 || game.isGameOver()) {
+    return evaluatePosition(game);
+  }
+
+  if (isMaximizing) { // Black's turn - we want to maximize score (find worst position)
+    let maxScore = -Infinity;
+    const moves = game.moves({ verbose: true });
+    
+    for (const move of moves) {
+      const gameCopy = new Chess(game.fen());
+      gameCopy.move(move);
+      const score = minimax(gameCopy, depth - 1, alpha, beta, false);
+      maxScore = Math.max(maxScore, score);
+      alpha = Math.max(alpha, score);
+      if (beta <= alpha) break;
+    }
+    return maxScore;
+  } else { // White's turn - we assume white plays best moves
+    let minScore = Infinity;
+    const moves = game.moves({ verbose: true });
+    
+    for (const move of moves) {
+      const gameCopy = new Chess(game.fen());
+      gameCopy.move(move);
+      const score = minimax(gameCopy, depth - 1, alpha, beta, true);
+      minScore = Math.min(minScore, score);
+      beta = Math.min(beta, score);
+      if (beta <= alpha) break;
+    }
+    return minScore;
+  }
+}
+
 export default function ChessGame() {
   const [game, setGame] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | ''>('');
@@ -25,13 +176,12 @@ export default function ChessGame() {
   useEffect(() => {
     if (!isComputerThinking && game.turn() === 'b' && !game.isGameOver()) {
       setIsComputerThinking(true);
-      const possibleMoves = game.moves();
-      const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-      const move = possibleMoves[randomIndex];
-
+      
+      // Use setTimeout to prevent UI blocking
       setTimeout(() => {
+        const worstMove = findWorstMove(game, 2); // Increased depth to 2 for more strategic bad moves
         const gameCopy = new Chess(game.fen());
-        gameCopy.move(move);
+        gameCopy.move(worstMove);
         setGame(gameCopy);
         setIsComputerThinking(false);
       }, 200);
@@ -183,7 +333,7 @@ export default function ChessGame() {
           <div className="px-4 py-2 bg-gray-100 rounded-lg">
             <span className="font-medium">Turn: </span>
             <span className={game.turn() === 'w' ? 'text-blue-600' : 'text-red-600'}>
-              {game.turn() === 'w' ? 'Your Turn (White)' : 'Computer (Black)'}
+              {game.turn() === 'w' ? 'Your Turn (White)' : 'Losing Bot (Black)'}
             </span>
           </div>
         </div>
@@ -198,7 +348,7 @@ export default function ChessGame() {
                 : 'Stalemate!'}
             </p>
             <p className="text-gray-600 mt-2">
-              {game.turn() === 'w' ? 'Computer (Black)' : 'You (White)'} wins!
+              {game.turn() === 'w' ? 'Losing Bot (Black)' : 'You (White)'} wins!
             </p>
           </div>
         )}
