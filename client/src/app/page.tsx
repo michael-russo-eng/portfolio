@@ -37,6 +37,13 @@ const demos = [
     description: "Supporting Remote Collaboration in Open Space with Embodied Proxy.",
     link: "https://www.youtube.com/watch?v=Sy0UpruV6C4",
     tag: "CHI/2023"
+  },
+  {
+    title: "Chess Bot",
+    videoUrl: "/videos/chess_game_play.mp4",
+    description: "Using Minimax Algorithm For Chess Bot Designed to Lose.",
+    link: "https://www.michaelrusso3rd.com/hobbies/chess",
+    tag: "AI/2024"
   }
 
 ];

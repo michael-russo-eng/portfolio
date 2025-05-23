@@ -54,7 +54,7 @@ export default function HobbiesLayout({
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Exploring passions beyond the digital world
+            Big dreams, questionable skills
           </motion.p>
         </motion.div>
       </section>
