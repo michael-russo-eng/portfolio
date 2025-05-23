@@ -35,13 +35,34 @@ async function getByCategory(category: string) {
 
     try {
         console.log('Fetching RSS feed...');
-        // TechCrunch's RSS feed for categories
         const feed = await parser.parseURL(`https://techcrunch.com/category/${category}/feed/`);
         console.log('Feed fetched, processing items...');
 
+        // Log the raw feed data for the first item to see what we're getting
+        if (feed.items.length > 0) {
+            const firstItem = feed.items[0];
+            console.log('Raw feed item example:', {
+                title: firstItem.title,
+                contentLength: firstItem.content?.length || 0,
+                contentPreview: firstItem.content?.substring(0, 100) + '...',
+                contentSnippetLength: firstItem.contentSnippet?.length || 0,
+                contentSnippetPreview: firstItem.contentSnippet?.substring(0, 100) + '...',
+                link: firstItem.link,
+                // Log all available fields
+                availableFields: Object.keys(firstItem)
+            });
+        }
+
         // Get the first 2 items
         const items = feed.items.slice(0, 2).map((item: CustomItem) => {
-            console.log('Processing item:', item.title);
+            console.log('Processing item:', {
+                title: item.title,
+                hasContent: !!item.content,
+                contentLength: item.content?.length || 0,
+                hasContentSnippet: !!item.contentSnippet,
+                contentSnippetLength: item.contentSnippet?.length || 0
+            });
+
             return {
                 title: item.title,
                 link: item.link,
@@ -49,8 +70,7 @@ async function getByCategory(category: string) {
                 author: item.author || item.creator,
                 date: item.isoDate,
                 categories: item.categories || [],
-                // Extract a summary from the content if available
-                summary: item.contentSnippet || item.content?.substring(0, 200) + '...'
+                summary: item.contentSnippet || item.content || 'No content available'
             };
         });
 
