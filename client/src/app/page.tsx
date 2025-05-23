@@ -110,7 +110,8 @@ export default function Home() {
           >
             <p className="text-xl leading-relaxed">
               I&apos;m a software engineer with a passion for building products and finding solutions through data.
-              My journey combines technical growth in AI, ML, and SWE domains and then applying them where I can. 
+              My journey combines technical growth in AI, ML, and SWE domains and then applying them where I can. In my free time,
+              you can find me along the beaches in San Diego, CA, where I am either surfing, golfing, or finding a bite to eat.
             </p>
           </motion.div>
         </motion.div>
