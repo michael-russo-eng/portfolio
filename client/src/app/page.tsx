@@ -109,9 +109,8 @@ export default function Home() {
             className="prose prose-lg max-w-none mx-auto text-gray-600"
           >
             <p className="text-xl leading-relaxed">
-              I&apos;m a software engineer with a passion for Generative AI and building innovative solutions.
-              My journey combines technical expertise with a deep understanding of healthcare technology,
-              allowing me to create impactful solutions that make a real difference.
+              I&apos;m a software engineer with a passion for building products and finding solutions through data.
+              My journey combines technical growth in AI, ML, and SWE domains and then applying them where I can. 
             </p>
           </motion.div>
         </motion.div>
