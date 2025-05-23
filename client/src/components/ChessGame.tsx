@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Chess, Move, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { motion } from 'framer-motion';
+import ErrorMessage from './ErrorMessage';
 
 type SquareStyles = {
   [key in Square]?: {
@@ -595,6 +596,7 @@ export default function ChessGame() {
   const [moveSquares, setMoveSquares] = useState<SquareStyles>({});
   const [optionSquares, setOptionSquares] = useState<SquareStyles>({});
   const [isComputerThinking, setIsComputerThinking] = useState(false);
+  const [currentError, setError] = useState<string | null>(null);
 
   // Effect to handle computer moves when it's black's turn
   useEffect(() => {
@@ -625,14 +627,19 @@ export default function ChessGame() {
         promotion: 'q', // Always promote to a queen for simplicity
       });
 
-      if (move === null) return false;
+      if (move === null) {
+        setError('Invalid move');
+        return false;
+      }
 
       setGame(gameCopy);
       setMoveFrom('');
       setMoveSquares({});
       setOptionSquares({});
+      setError(null);
       return true;
-    } catch (error) {
+    } catch {
+      setError('An error occurred while making the move');
       return false;
     }
   }, [game, isComputerThinking]);
@@ -723,6 +730,12 @@ export default function ChessGame() {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-2xl p-8 shadow-sm"
     >
+      {currentError && (
+        <ErrorMessage
+          message={currentError}
+          onDismiss={() => setError(null)}
+        />
+      )}
       <div className="flex flex-col items-center space-y-6">
         <div className="w-full max-w-[600px] aspect-square relative">
           <Chessboard
