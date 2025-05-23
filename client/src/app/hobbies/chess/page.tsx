@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import ChessGame from '@/components/ChessGame';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -35,6 +36,17 @@ export default function ChessPage() {
             techniques.
           </p>
         </div>
+      </motion.section>
+
+      {/* Interactive Chess Game */}
+      <motion.section variants={fadeInUp}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-6">Play a Game</h2>
+        <p className="text-gray-600 mb-8">
+          Challenge yourself against our AI opponent. The computer will make random moves, 
+          making it perfect for practice and learning. Click on a piece to see its possible moves, 
+          and try to checkmate the computer!
+        </p>
+        <ChessGame />
       </motion.section>
 
       {/* Stats Section */}
