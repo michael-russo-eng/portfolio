@@ -2,6 +2,10 @@
 
 import { motion } from 'framer-motion';
 import ChessGame from '@/components/ChessGame';
+import StrategyList from '@/components/StrategyList';
+import AlgorithmFeatures from '@/components/AlgorithmFeatures';
+import type { StrategyItem } from '@/components/StrategyList';
+import type { AlgorithmFeature } from '@/components/AlgorithmFeatures';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -18,6 +22,32 @@ const staggerContainer = {
 };
 
 export default function ChessPage() {
+  const botStrategies: StrategyItem[] = [
+    { description: "Keep pieces on back rank", type: "development" },
+    { description: "Move pieces to edges", type: "positioning" },
+    { description: "Create isolated pieces", type: "tactical" },
+    { description: "Make doubled pawns", type: "structural" },
+    { description: "Keep king in center", type: "safety" },
+  ];
+
+  const algorithmFeatures: AlgorithmFeature[] = [
+    {
+      title: "Reversed Piece Values",
+      description: "Higher scores indicate worse positions for black",
+      type: "evaluation"
+    },
+    {
+      title: "Position-based Penalties",
+      description: "Rewards pieces for being in bad positions",
+      type: "position"
+    },
+    {
+      title: "Strategic Weaknesses",
+      description: "Encourages creation of structural weaknesses",
+      type: "strategy"
+    }
+  ];
+
   return (
     <motion.div
       variants={staggerContainer}
@@ -64,32 +94,14 @@ export default function ChessPage() {
             <span className="font-semibold text-purple-600"> alpha-beta pruning</span> for efficiency. 
             Instead of looking for the best moves, it actively seeks out the worst possible moves through a 
             <span className="font-semibold text-purple-600"> reversed evaluation function</span> that 
-            rewards bad chess principles. The algorithm&apos;s key design choices include:
+            rewards bad chess principles.
           </p>
-          <ul>
-            <li>
-              <span className="font-semibold text-purple-600">Reversed piece values</span> - Higher scores 
-              indicate worse positions for black
-            </li>
-            <li>
-              <span className="font-semibold text-purple-600">Position-based penalties</span> - Rewards 
-              pieces for being in bad positions
-            </li>
-            <li>
-              <span className="font-semibold text-purple-600">Strategic weaknesses</span> - Encourages 
-              creation of structural weaknesses
-            </li>
-          </ul>
-          <p>
-            The bot will consistently try to:
-          </p>
-          <ul>
-            <li>Keep its pieces on the <span className="font-semibold text-purple-600">back rank</span> (undeveloped)</li>
-            <li>Move pieces to the <span className="font-semibold text-purple-600">edges of the board</span> (poor positioning)</li>
-            <li>Create <span className="font-semibold text-purple-600">isolated pieces</span> (tactical weaknesses)</li>
-            <li>Make <span className="font-semibold text-purple-600">doubled pawns</span> (structural weaknesses)</li>
-            <li>Keep its <span className="font-semibold text-purple-600">king in the center</span> (safety risk)</li>
-          </ul>
+          <div className="my-6">
+            <AlgorithmFeatures items={algorithmFeatures} title="Algorithm's Key Design Choices" />
+          </div>
+          <div className="my-6">
+            <StrategyList items={botStrategies} title="Bot's Losing Strategy" />
+          </div>
           <p>
             Your challenge? Try to win against a bot that&apos;s trying to lose. If you still manage to
             lose to this bot, well... welcome to my world of chess frustration! Maybe we should start a
@@ -105,6 +117,7 @@ export default function ChessPage() {
       </motion.section>
 
       {/* Stats Section */}
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">Stats</h2>
       <motion.section variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-purple-50 rounded-2xl p-6 text-center">
           <h3 className="text-2xl font-bold text-purple-600 mb-2">Rating</h3>
