@@ -62,8 +62,7 @@ export default function ChessPage() {
           <p>
             Chess has been a fascinating journey for me. I&apos;ve spent countless hours studying openings,
             analyzing positions, and playing games, yet somehow I always seem to find myself stuck at the
-            same rating. It&apos;s like trying to solve a Rubik&apos;s cube while someone keeps adding new
-            colors to it!
+            same rating.
           </p>
           <p>
             After years of trying to improve and hitting that undeniable plateau, I decided to take a

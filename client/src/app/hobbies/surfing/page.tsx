@@ -34,13 +34,7 @@ export default function SurfingPage() {
             one day not getting out classed by the local groms. 
           </p>
           <p>
-            There&apos;s something magical about catching that perfect wave - it&apos;s like dancing with the ocean.
-          </p>
-          <p>
-            I&apos;ve been chasing waves for years, and I&apos;m still learning.
-          </p>
-          <p>
-            It&apos;s not about being the best, it&apos;s about the journey.
+            Sometimes I have to remind myself, It&apos;s not about being the best, it&apos;s about the journey.
           </p>
         </div>
       </motion.section>
