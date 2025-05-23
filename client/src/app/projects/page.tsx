@@ -61,6 +61,17 @@ export default function Projects() {
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             A collection of my work in software engineering, AI, and healthcare technology.
             Each project represents a unique challenge and learning opportunity.
+          </p> <br/>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            You can find more details regarding these experiences on my{' '}
+            <a 
+              href="https://www.linkedin.com/in/mikerusso3/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-500 transition-colors"
+            >
+              LinkedIn
+            </a>
           </p>
         </motion.div>
 
