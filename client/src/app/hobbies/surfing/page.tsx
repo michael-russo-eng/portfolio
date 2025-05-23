@@ -59,7 +59,7 @@ export default function SurfingPage() {
         </div>
         <div className="bg-purple-50 rounded-2xl p-6 text-center">
           <h3 className="text-2xl font-bold text-purple-600 mb-2">Favorite Board</h3>
-          <p className="text-4xl font-bold text-gray-900">5'8 27.2L</p>
+          <p className="text-4xl font-bold text-gray-900">5&apos;8 27.2L</p>
           <p className="text-gray-600 mt-2">SharpEye Inferno 72</p>
         </div>
       </motion.section>
@@ -81,7 +81,7 @@ export default function SurfingPage() {
               </li>
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                <span className="text-gray-700">Black's Beach</span>
+                <span className="text-gray-700">Black&apos;s Beach</span>
               </li>
             </ul>
           </div>

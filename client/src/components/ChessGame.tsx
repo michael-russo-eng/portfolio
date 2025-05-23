@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Chess, Move, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { motion } from 'framer-motion';
@@ -243,7 +243,6 @@ function isRepetitiveMove(tracker: RepetitionTracker, piece: string, from: strin
 // Progressive deepening with time management
 function findWorstMoveWithTimeManagement(game: Chess): Move {
   let bestMove: Move | null = null;
-  let bestScore = -Infinity;
   const startTime = Date.now();
   const gamePhase = getGamePhase(game);
   
@@ -379,7 +378,6 @@ function findWorstMoveWithTimeManagement(game: Chess): Move {
 
     if (currentBestMove && Date.now() - startTime <= MAX_SEARCH_TIME) {
       bestMove = currentBestMove;
-      bestScore = currentBestScore;
     } else {
       break;
     }
