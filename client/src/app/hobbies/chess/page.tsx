@@ -97,10 +97,10 @@ export default function ChessPage() {
             rewards bad chess principles.
           </p>
           <div className="my-6">
-            <AlgorithmFeatures items={algorithmFeatures} title="Algorithm's Key Design Choices" />
+            <AlgorithmFeatures items={algorithmFeatures} title="Algorithm&apos;s Key Design Choices" />
           </div>
           <div className="my-6">
-            <StrategyList items={botStrategies} title="Bot's Losing Strategy" />
+            <StrategyList items={botStrategies} title="Bot&apos;s Losing Strategy" />
           </div>
           <p>
             Your challenge? Try to win against a bot that&apos;s trying to lose. If you still manage to
@@ -145,7 +145,7 @@ export default function ChessPage() {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                <span className="text-gray-700">King's Indian Attack</span>
+                <span className="text-gray-700">King&apos;s Indian Attack</span>
               </li>
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -166,7 +166,7 @@ export default function ChessPage() {
               </li>
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                <span className="text-gray-700">King's Indian Defense</span>
+                <span className="text-gray-700">King&apos;s Indian Defense</span>
               </li>
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>

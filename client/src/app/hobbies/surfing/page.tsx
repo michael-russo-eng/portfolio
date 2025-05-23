@@ -30,8 +30,17 @@ export default function SurfingPage() {
         <div className="prose prose-lg max-w-none text-gray-600">
           <p>
             I started surfing years ago with my brother back in New Jersey. My first surf board was about as good as what you can expect $20 will get you at a yard sale. Once given the opportunity to relocate, I moved to San Diego, CA in 2021. This
-            is my favorite hobby when I have some time to step away from the computer. I've been taking lessons for the past two years with the hopes of
+            is my favorite hobby when I have some time to step away from the computer. I&apos;ve been taking lessons for the past two years with the hopes of
             one day not getting out classed by the local groms. 
+          </p>
+          <p>
+            There&apos;s something magical about catching that perfect wave - it&apos;s like dancing with the ocean.
+          </p>
+          <p>
+            I&apos;ve been chasing waves for years, and I&apos;m still learning.
+          </p>
+          <p>
+            It&apos;s not about being the best, it&apos;s about the journey.
           </p>
         </div>
       </motion.section>
