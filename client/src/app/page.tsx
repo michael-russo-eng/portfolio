@@ -20,17 +20,24 @@ const demos = [
   {
     title: "Sushi Maker",
     videoUrl: "/videos/sushi-maker.mp4",
-    description: "Automatic sushi machine that makes a piece of 'nigiri sushi'.",
+    description: "Automatic Sushi Machine That Makes a Piece of 'Nigiri Sushi'.",
     link: "https://www.youtube.com/watch?v=pPuZfKiCb-4",
     tag: "Prototyping/2018"
   },
-    {
+  {
+    title: "Tetris",
+    videoUrl: "/videos/tetris.mp4",
+    description: "Training Tetris Bot with Reinforcement Learning.",
+    link: "https://github.com/oscarso2000/TetrisDeepLearningAI#",
+    tag: "CS5700/2021"
+  },
+  {
     title: "ReMotion",
     videoUrl: "/videos/remotion.mp4",
     description: "Supporting Remote Collaboration in Open Space with Embodied Proxy.",
     link: "https://www.youtube.com/watch?v=Sy0UpruV6C4",
     tag: "CHI/2023"
-  },
+  }
 
 ];
 
