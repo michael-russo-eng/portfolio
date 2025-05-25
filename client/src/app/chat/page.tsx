@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
@@ -22,24 +23,47 @@ export default function ChatPage() {
       signal: controller.signal,
     });
 
-    const data = await res.json();
-    setMessages((msgs) => [
-      ...msgs,
-      { role: 'assistant', content: data.output || 'No response.' }
-    ]);
+    if (!res.body) {
+      setLoading(false);
+      return;
+    }
+
+    const reader = res.body.getReader();
+    let aiMsg = '';
+    setMessages((msgs) => [...msgs, { role: 'assistant', content: '' }]);
+    let done = false;
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      if (value) {
+        const chunk = new TextDecoder().decode(value);
+        aiMsg += chunk;
+        setMessages((msgs) =>
+          msgs.map((msg, i) =>
+            i === msgs.length - 1 ? { ...msg, content: aiMsg } : msg
+          )
+        );
+      }
+    }
     setLoading(false);
     setInput('');
   };
 
   return (
     <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-4">Chat with LLM</h1>
-      <div className="border rounded-lg p-4 h-96 overflow-y-auto bg-gray-50 mb-4">
+      <h1 className="text-2xl font-bold mb-5">Chat with LLM</h1>
+      <div className="border rounded-lg p-4 h-[800px] w-[600px] overflow-y-auto bg-gray-50 mb-4">
         {messages.map((msg, i) => (
           <div key={i} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`inline-block px-3 py-2 rounded-lg ${msg.role === 'user' ? 'bg-blue-200' : 'bg-green-100'}`}>
-              {msg.content}
-            </span>
+            {msg.role === 'assistant' ? (
+              <span className="inline-block px-3 py-2 rounded-lg bg-green-100 text-left max-w-full whitespace-pre-wrap break-words">
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </span>
+            ) : (
+              <span className="inline-block px-3 py-2 rounded-lg bg-blue-200">
+                {msg.content}
+              </span>
+            )}
           </div>
         ))}
         {loading && (

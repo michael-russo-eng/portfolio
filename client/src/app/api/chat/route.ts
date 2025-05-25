@@ -1,80 +1,48 @@
 import { NextRequest } from 'next/server';
+import OpenAI from 'openai';
+import { RUNPOD_API_KEY, RUNPOD_ENDPOINT_ID, RUNPOD_MODEL_NAME } from '@/utils/env';
 
-const RUNPOD_API_KEY = process.env.NEXT_PUBLIC_RUNPOD_API_KEY;
-const RUNPOD_ENDPOINT_ID = process.env.NEXT_PUBLIC_RUNPOD_LLAMA_8B_INSTRUCT_FP8;
-const LLM_INSTANCE_URL = process.env.NEXT_PUBLIC_GPU_INSTANCE_URL;
+const openai = new OpenAI({
+  apiKey: RUNPOD_API_KEY,
+  baseURL: `https://api.runpod.ai/v2/${RUNPOD_ENDPOINT_ID}/openai/v1`,
+});
 
-const RUNPOD_ENDPOINT_URL = `${LLM_INSTANCE_URL}/${RUNPOD_ENDPOINT_ID}/run`;
-const RUNPOD_STATUS_URL = `${LLM_INSTANCE_URL}/${RUNPOD_ENDPOINT_ID}/status`;
-
-export const runtime = 'edge'; // Enable streaming
-
-function extractTextFromOutput(output: any): string {
-  try {
-    console.log(output);
-    if (
-      output &&
-      Array.isArray(output) &&
-      output[0]?.choices &&
-      Array.isArray(output[0].choices) &&
-      output[0].choices[0]?.tokens
-    ) {
-      return output[0].choices[0].tokens.join('');
-    }
-    return JSON.stringify(output);
-  } catch {
-    return String(output);
-  }
-}
-
-async function pollForResult(jobId: string, maxAttempts = 30, interval = 10000) {
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    await new Promise((r) => setTimeout(r, interval));
-    const res = await fetch(`${RUNPOD_STATUS_URL}/${jobId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RUNPOD_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await res.json();
-    if (data.status === 'COMPLETED') {
-      return data.output;
-    }
-    if (data.status === 'FAILED') {
-      throw new Error('Job failed');
-    }
-  }
-  throw new Error('Timed out waiting for job result');
-}
+export const runtime = 'nodejs'; // Not 'edge', so we can use the OpenAI SDK
 
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
 
-  const response = await fetch(RUNPOD_ENDPOINT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${RUNPOD_API_KEY}`,
-    },
-    body: JSON.stringify({ input: { prompt } }),
+  const stream = await openai.chat.completions.create({
+    model: RUNPOD_MODEL_NAME,
+    messages: [
+      { role: 'system', content: 'You are a helpful assistant.' },
+      { role: 'user', content: prompt }
+    ],
+    temperature: 0.7,
+    max_tokens: 500,
+    stream: true,
   });
 
-  const data = await response.json();
+  // Stream the response to the client as plain text
+  const encoder = new TextEncoder();
 
-  if (data.id) {
-    // Poll for result
-    try {
-      const output = await pollForResult(data.id);
-      const text = extractTextFromOutput(output);
-      return new Response(JSON.stringify({ output: text }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    } catch (err: any) {
-      return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  const readable = new ReadableStream({
+    async start(controller) {
+      for await (const chunk of stream) {
+        const delta = chunk.choices?.[0]?.delta?.content || '';
+        if (delta) {
+          controller.enqueue(encoder.encode(delta));
+        }
+      }
+      controller.close();
     }
-  } else {
-    return new Response(JSON.stringify(data), { status: response.status });
-  }
+  });
+
+  return new Response(readable, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
 } 
