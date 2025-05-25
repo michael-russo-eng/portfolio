@@ -20,6 +20,7 @@ const Navigation = () => {
   const navItems = [
     { path: '/', label: 'About Me' },
     { path: '/projects', label: 'Projects' },
+    { path: '/chat', label: 'Chat' },
     { path: '/hobbies', label: 'Hobbies' },
     { path: '/contact', label: 'Contact' },
   ];
