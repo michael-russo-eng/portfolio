@@ -1,13 +1,26 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+interface Message {
+  role: string;
+  content: string;
+}
+
 export default function ChatPage() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom on new message
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -40,7 +53,9 @@ export default function ChatPage() {
         aiMsg += chunk;
         setMessages((msgs) =>
           msgs.map((msg, i) =>
-            i === msgs.length - 1 ? { ...msg, content: aiMsg } : msg
+            i === msgs.length - 1
+              ? { ...msg, content: aiMsg }
+              : msg
           )
         );
       }
@@ -50,52 +65,79 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-5">Chat with LLM</h1>
-      <div className="border rounded-lg p-4 h-[800px] w-[600px] overflow-y-auto bg-gray-50 mb-4">
-        {messages.map((msg, i) => (
-          <div key={i} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-            {msg.role === 'assistant' ? (
-              <span className="inline-block px-3 py-2 rounded-lg bg-green-100 text-left max-w-full whitespace-pre-wrap break-words">
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
-              </span>
-            ) : (
-              <span className="inline-block px-3 py-2 rounded-lg bg-blue-200">
-                {msg.content}
-              </span>
-            )}
-          </div>
-        ))}
-        {loading && (
-          <div className="text-left">
-            <span className="inline-block px-3 py-2 rounded-lg bg-green-100 animate-pulse">
-              ...
-            </span>
-          </div>
-        )}
-      </div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          sendMessage();
-        }}
-        className="flex space-x-2"
-      >
-        <input
-          className="flex-1 border rounded px-3 py-2"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={loading}
-          placeholder="Type your message..."
-        />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-          disabled={loading}
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
+      <div className="w-full max-w-2xl flex flex-col flex-1 rounded-xl shadow-lg border border-gray-200 bg-white mt-10 mb-6 overflow-hidden">
+        <div
+          ref={chatContainerRef}
+          className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
+          style={{ minHeight: 500, maxHeight: 700 }}
         >
-          Send
-        </button>
-      </form>
+          {messages.length === 0 && (
+            <div className="text-center text-gray-400 mt-20">
+              Start the conversation!
+            </div>
+          )}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`
+                  max-w-[80%] px-4 py-3 rounded-2xl shadow-sm
+                  ${msg.role === 'user'
+                    ? 'bg-blue-500 text-white rounded-br-md'
+                    : 'bg-gray-100 text-gray-900 rounded-bl-md border border-gray-200'}
+                  whitespace-pre-wrap break-words
+                `}
+              >
+                {msg.role === 'assistant' ? (
+                  <div className="prose prose-sm prose-slate dark:prose-invert">
+                    <ReactMarkdown>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <span>{msg.content}</span>
+                )}
+              </div>
+            </div>
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="bg-gray-100 text-gray-900 px-4 py-3 rounded-2xl shadow-sm animate-pulse">
+                ...
+              </div>
+            </div>
+          )}
+        </div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            sendMessage();
+          }}
+          className="flex items-center gap-2 border-t border-gray-200 bg-white px-4 py-3"
+        >
+          <input
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            disabled={loading}
+            placeholder="Type your message..."
+            autoFocus
+          />
+          <button
+            type="submit"
+            className="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+            disabled={loading}
+          >
+            Send
+          </button>
+        </form>
+      </div>
+      <div className="text-xs text-gray-400 mb-4">
+        Powered by RunPod + Vercel + OpenAI SDK
+      </div>
     </div>
   );
 } 
