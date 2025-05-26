@@ -86,16 +86,16 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
      <div className="mb-8 flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl shadow-sm">
-  <div className="flex-shrink-0 mt-1">
-    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
-    </svg>
-  </div>
-  <div className="text-gray-700 text-sm leading-relaxed">
-    <span className="font-semibold text-blue-700">Welcome!</span> This serverless LLM-powered chatbot is built for experimentation and cost estimation across different deployment infrastructures.<br />
-    <span className="text-gray-500">Feel free to interact and test its capabilities. <span className="italic">(Service availability may vary depending on deployment status.)</span></span>
-  </div>
-</div>
+        <div className="flex-shrink-0 mt-1">
+          <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+          </svg>
+        </div>
+        <div className="text-gray-700 text-sm leading-relaxed">
+          <span className="font-semibold text-blue-700">Welcome!</span> This serverless LLM-powered chatbot is built for experimentation and cost estimation across different deployment infrastructures.<br />
+          <span className="text-gray-500">Feel free to interact and test its capabilities. <span className="italic">(Service availability may vary depending on deployment status.)</span></span>
+        </div>
+      </div>
       <div className="w-full max-w-2xl flex flex-col flex-1 rounded-xl shadow-lg border border-gray-200 bg-white mt-10 mb-6 overflow-hidden">
         {/* Stats Display */}
         <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
