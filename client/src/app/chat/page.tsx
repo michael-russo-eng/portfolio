@@ -6,14 +6,17 @@ import ReactMarkdown from 'react-markdown';
 interface Message {
   role: string;
   content: string;
+  ttft?: number; // Time to first token in milliseconds
 }
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [ttft, setTtft] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const requestStartTimeRef = useRef<number | null>(null);
 
   // Auto-scroll to bottom on new message
   useEffect(() => {
@@ -26,6 +29,7 @@ export default function ChatPage() {
     if (!input.trim()) return;
     setMessages((msgs) => [...msgs, { role: 'user', content: input }]);
     setLoading(true);
+    requestStartTimeRef.current = Date.now();
 
     const controller = new AbortController();
     abortRef.current = controller;
@@ -43,6 +47,7 @@ export default function ChatPage() {
 
     const reader = res.body.getReader();
     let aiMsg = '';
+    let firstTokenReceived = false;
     setMessages((msgs) => [...msgs, { role: 'assistant', content: '' }]);
     let done = false;
     while (!done) {
@@ -50,23 +55,57 @@ export default function ChatPage() {
       done = doneReading;
       if (value) {
         const chunk = new TextDecoder().decode(value);
-        aiMsg += chunk;
-        setMessages((msgs) =>
-          msgs.map((msg, i) =>
-            i === msgs.length - 1
-              ? { ...msg, content: aiMsg }
-              : msg
-          )
-        );
+        if (!firstTokenReceived && chunk.trim()) {
+          firstTokenReceived = true;
+          const ttft = Date.now() - (requestStartTimeRef.current || Date.now());
+          setTtft(ttft);
+          setMessages((msgs) =>
+            msgs.map((msg, i) =>
+              i === msgs.length - 1
+                ? { ...msg, content: aiMsg + chunk, ttft }
+                : msg
+            )
+          );
+        } else {
+          aiMsg += chunk;
+          setMessages((msgs) =>
+            msgs.map((msg, i) =>
+              i === msgs.length - 1
+                ? { ...msg, content: aiMsg }
+                : msg
+            )
+          );
+        }
       }
     }
     setLoading(false);
     setInput('');
+    requestStartTimeRef.current = null;
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
       <div className="w-full max-w-2xl flex flex-col flex-1 rounded-xl shadow-lg border border-gray-200 bg-white mt-10 mb-6 overflow-hidden">
+        {/* Stats Display */}
+        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-gray-600">
+              {ttft !== null ? (
+                <span className="flex items-center gap-2">
+                  <span className="font-medium">TTFT:</span>
+                  <span className={`${ttft < 1000 ? 'text-green-600' : ttft < 2000 ? 'text-yellow-600' : 'text-red-600'} font-mono`}>
+                    {ttft}ms
+                  </span>
+                </span>
+              ) : (
+                <span className="text-gray-400">No response yet</span>
+              )}
+            </div>
+            <div className="text-gray-400 text-xs">
+              Powered by RunPod + Vercel + OpenAI SDK
+            </div>
+          </div>
+        </div>
         <div
           ref={chatContainerRef}
           className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
@@ -96,6 +135,11 @@ export default function ChatPage() {
                     <ReactMarkdown>
                       {msg.content}
                     </ReactMarkdown>
+                    {msg.ttft && (
+                      <div className="text-xs text-gray-500 mt-2">
+                        Time to first token: {msg.ttft}ms
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <span>{msg.content}</span>
@@ -134,9 +178,6 @@ export default function ChatPage() {
             Send
           </button>
         </form>
-      </div>
-      <div className="text-xs text-gray-400 mb-4">
-        Powered by RunPod + Vercel + OpenAI SDK
       </div>
     </div>
   );
