@@ -1,6 +1,6 @@
 # Michael Russo - Portfolio
 
-A modern, interactive portfolio website showcasing software engineering projects, AI/ML work, and personal interests. Built with Next.js and featuring a clean, responsive design with smooth animations.
+A modern, interactive portfolio website showcasing software engineering projects, AI/ML work, and personal interests. 
 
 ## 🌟 Features
 
