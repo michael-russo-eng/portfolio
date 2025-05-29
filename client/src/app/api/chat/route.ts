@@ -11,7 +11,7 @@ export const runtime = 'nodejs'; // Not 'edge', so we can use the OpenAI SDK
 
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
-
+  console.log("Chat Prompt", prompt);
   const stream = await openai.chat.completions.create({
     model: RUNPOD_MODEL_NAME,
     messages: [
